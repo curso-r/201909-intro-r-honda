@@ -9,6 +9,9 @@ library(tidyverse)
 # 2. Podem ser relativos ao diretório de trabalho
 getwd()
 
+# exercício: na linha debaixo, abram aspas e apertem TAB.
+
+# LEITURA DE DADOS --------------------------------------------------------
 # Principais formatos -----------------------------------------------------
 
 # Arquivos de texto
@@ -43,10 +46,16 @@ library(haven)
 imdb_sas <- read_sas("dados/imdb.sas7bdat")
 imdb_spss <- read_spss("dados/imdb.sav")
 
-# pacote rio
-library(rio)
-imdb_rio <- rio::import("dados/imdb.xlsx")
-
 # data.table
 library(data.table)
 imdb_dt <- fread("dados/imdb.csv")
+
+
+# GRAVANDO DADOS ------------------------------------------------------------
+# funcoes que iniciam com 'write'
+# csv
+write_csv(imdb, path = "dados/imdb.csv")
+
+# Excel
+library(writexl)
+write_xlsx(imdb_excel, path = "dados/imdb.xlsx")
