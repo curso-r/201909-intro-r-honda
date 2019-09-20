@@ -1,6 +1,6 @@
 ---
 title: "Introdução à programação em R"
-author: "Curso-R"
+author: "Curso-R | Honda"
 date: ""
 output:
   xaringan::moon_reader:
@@ -9,6 +9,12 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
+---
+class: middle, center
+
+# http://bit.ly/intro-r-honda
+
+
 ---
 class: middle, center
 
@@ -30,12 +36,14 @@ class: middle, center
 
 - Curso-R surge oficialmente em 2017
 
-- Mais de 20 cursos e 300 alunos
+- Mais de 50 cursos e 700 alunos
 
 ---
 class: middle, center
 
 # Sobre o curso
+
+
 
 ---
 ## Cronograma
