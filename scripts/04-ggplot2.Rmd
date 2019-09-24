@@ -12,6 +12,7 @@ output: html_document
 
 - Tenta responder a pergunta: o que é um gráfico estatístico?
 
+CTRL+ALT+N
 
 > Um gráfico estatístico é uma representação visual dos dados que utiliza os atributos estéticos (posição, cor, forma, tamanho, ...) de formas geométricas (pontos, linhas, barras, ...).
 
@@ -27,6 +28,7 @@ knitr::include_graphics("img/layers.png")
 ```{r}
 library(tidyverse)
 library(ggplot2)
+2+2
 ```
 
 # Ler dados
@@ -435,7 +437,7 @@ E se quiséssemos utilizar as 3 colunas de atores?
 
 ```{r}
 imdb_atores <- imdb %>% 
-  gather(posicao, ator, ator_1, ator_2, ator_3) %>% 
+  gather(importancia_do_ator, nome_do_ator, ator_1, ator_2, ator_3) %>% 
 View(imdb_atores)
 ```
 
