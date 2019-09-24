@@ -6,6 +6,7 @@ library(dplyr)
 # Base de dados -----------------------------------------------------------
 
 imdb <- read_rds("dados/imdb.rds")
+View(imdb)
 
 # select ------------------------------------------------------------------
 
@@ -18,6 +19,7 @@ select(imdb, titulo, ano, orcamento)
 # exemplo 2 
 
 select(imdb, starts_with("ator"))
+select(imdb, num_range(prefix = "ator_", range = 1:3))
 
 # exemplo 3
 
@@ -29,35 +31,51 @@ select(imdb, Diretor = diretor)
 rename(imdb, Diretor = diretor)
 
 # Exercício 1
-# Crie uma tabela com apenas as colunas titulo, diretor, e orcamento. Salve em um
+# Crie uma tabela com apenas as colunas titulo, 
+# diretor, e orcamento. Salve em um
 # objeto chamado imdb_simples.
+
+ncol(imdb) #num de colunas da base
+
 imdb_simples <- select(
   imdb, 
   titulo, 
   diretor, 
   orcamento
 )
-imdb_simples
-view(imdb_simples)
 
 # Exercício 2
 # Remova as colunas ator_1, ator_2 e ator_3 de três formas diferentes. Salve em um
 # objeto chamado imdb_sem_ator.
+
+imdb_sem_ator <- select(
+  imdb,
+  -starts_with("ator")
+)
+  
+  
 imdb_sem_ator <- select(
   imdb,
   -ator_1,
   -ator_2,
   -ator_3
+) 
+
+imdb_sem_ator <- select(
+  imdb,
+  titulo:likes_facebook
 )
 
-imdb_sem_ator <- select(imdb, -starts_with("ator"))
+imdb_sem_ator <- select(
+  imdb,
+  -contains("ator_")
+)
+
+imdb_sem_ator <- select(
+  imdb,
+  -matches("[0-9]$")
+)
   
-imdb_sem_ator <- select(imdb, titulo:likes_facebook)
-
-imdb_sem_ator <- select(imdb, -matches("[0-9]$"))
-
-imdb_sem_ator <- select(imdb, -num_range("ator_", 1:3))
-
 # arrange -----------------------------------------------------------------
 
 # exemplo 1
@@ -67,16 +85,17 @@ View(imdb_ord)
 
 # exemplo 2
 
-imdb_ord <- arrange(imdb, desc(orcamento))
+imdb_ord <- arrange(imdb, desc(receita/orcamento))
 View(imdb_ord)
 
 # exemplo 3
 
-imdb_ord <- arrange(imdb, desc(ano), titulo)
+imdb_ord <- arrange(imdb, desc(ano), diretor)
 View(imdb_ord)
 
+imdb <- distinct(imdb)
 
-
+count(imdb, diretor)
 
 imdb_ord <- arrange(imdb, desc(receita - orcamento))
 View(imdb_ord)
@@ -85,25 +104,26 @@ View(imdb_ord)
 # NA
 
 df <- tibble(x = c(NA, 2, 1), y = c(1, 2, 3))
+
 arrange(df, desc(x))
 
 # exercício 1
-# Ordene os filmes em ordem crescente de ano e decrescente de lucro e salve 
+# Ordene os filmes em ordem crescente de ano 
+# e decrescente de lucro e salve 
 # em um objeto chamado filmes_ordenados
+
 filmes_ordenados <- arrange(imdb, ano, desc(receita - orcamento))
 View(filmes_ordenados)
-
 
 # Exercício 2 
 # Selecione apenas as colunas título e orçamento 
 # e então ordene de forma decrescente pelo orçamento.
+imdb_select <- 
+imdb_arrange <- arrange(imdb_select, desc(orcamento))
 
-filmes_ordenados <- select(imdb, titulo, orcamento)
-filmes_ordenados <- arrange(filmes_ordenados, desc(orcamento))
+arrange(select(imdb, titulo, orcamento), desc(orcamento))
 
-filmes_ordenados <- arrange(select(imdb, titulo, orcamento), desc(orcamento))
-
-
+slice(imdb_arrange, 1:10)
 # Pipe (%>%) --------------------------------------------------------------
 
 # g(f(x)) = x %>% f() %>% g()
@@ -150,7 +170,11 @@ recipiente(rep("farinha", 2), "água", "fermento", "leite", "óleo") %>%
 
 imdb %>% 
   select(titulo, orcamento) %>% 
-  arrange(desc(orcamento))
+  arrange(desc(orcamento)) %>% 
+  slice(1:10) %>% 
+  writexl::write_xlsx("imdb_novo.xlsx")
+  
+write_csv(imdb_novo, "imdb_novo.csv")
 
 # Comparações lógicas ------------------------------------------------------
 
@@ -162,7 +186,7 @@ imdb %>%
 
 "a" < "c"
 
-"a1" %in% letters
+"a" %in% letters
 
 
 # Valores especiais -------------------------------------------------------
@@ -186,7 +210,7 @@ NULL # representa a ausência de informação.
 a <- NA
 a == NA
 
-is.na(NaN)
+is.na(NA)
 is.null()
 is.nan(NA)
 
@@ -201,9 +225,9 @@ x == y
 
 # Não sabemos.
 
-safe_f <- purrr::possibly(f, otherwise = NA)
-
-safe_f()
+safe_sum <- purrr::possibly(sum, otherwise = NA)
+sum("a")
+safe_sum("a")
 
 # filter ------------------------------------------------------------------
 

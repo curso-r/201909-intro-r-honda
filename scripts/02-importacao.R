@@ -1,4 +1,3 @@
-
 library(tidyverse)
 
 # Caminhos até o arquivo --------------------------------------------------
@@ -20,10 +19,14 @@ imdb2 <- read_delim("dados/imdb2.csv", delim = ";")
 
 # Excel
 library(readxl)
-imdb_excel <- read_excel("dados/imdb.xlsx")
+imdb_excel <- read_excel("dados/imdb.xlsx", sheet = 1:2)
+
+meu_bd <- read_fwf(file = "dados/imdb.csv", col_positions = c(3, 6, 10, 100))
+names(meu_bd) <- c("coluna 1", "preco", "nome do cliente", "data")
+
 
 # SQL ---------------------------------------------------------------------
-
+install.packages("RSQLite")
 conexao <- src_sqlite("dados/imdb.sqlite", create = TRUE)
 # copy_to(conexao, imdb, temporary = FALSE)
 
@@ -33,6 +36,8 @@ imdb_select <- tbl(conexao, sql("SELECT titulo, ano, diretor FROM imdb"))
 # trazer para a memória
 collect(imdb_sqlite)
 collect(imdb_select)
+DBI::dbSendQuery(conexao, "use meuSchema")
+copy_to(conexao, imdb)
 
 # db.rstudio.com
 
