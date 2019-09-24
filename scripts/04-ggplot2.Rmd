@@ -437,7 +437,7 @@ E se quiséssemos utilizar as 3 colunas de atores?
 
 ```{r}
 imdb_atores <- imdb %>% 
-  gather(posicao, ator, ator_1, ator_2, ator_3) %>% 
+  gather(importancia_do_ator, nome_do_ator, ator_1, ator_2, ator_3) %>% 
 View(imdb_atores)
 ```
 
