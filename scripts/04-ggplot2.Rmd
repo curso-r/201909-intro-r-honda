@@ -48,11 +48,11 @@ ggplot(imdb) +
 ```
 
 Vamos acrescentar a reta y = x para visualizar a quantidade de filmes que não se pagaram.
-
+(Também pintamos as bolinhas de roxo)
 ```{r}
 imdb %>%
   ggplot() +
-  geom_point(mapping = aes(x = orcamento, y = receita)) +
+  geom_point(mapping = aes(x = orcamento, y = receita), colour = "purple") +
   geom_abline(intercept = 0, slope = 1, color = "red")
 ```
 
@@ -83,22 +83,6 @@ imdb %>%
   labs(x = "Orçamento", y = "Arrecadação", color = "Houve lucro?") 
 ```
 
-
-Vamos também mudar as labels nos eixos.
-
-```{r}
-imdb %>%
-  mutate(
-    lucro = ifelse(lucro <= 0, "Não", "Sim")
-  ) %>%
-  filter(!is.na(lucro)) %>% 
-  ggplot() +
-  geom_point(mapping = aes(x = orcamento, y = receita, color = lucro)) +
-  labs(x = "Orçamento", y = "Arrecadação", color = "Houve lucro?") +
-  scale_y_continuous(label = scales::dollar_format()) +
-  scale_x_continuous(label = scales::dollar_format()) +
-  scale_color_manual(values = c("red", "green"), labels = c("N", "S"))
-```
 
 Também podemos colocar as variáveis na escala de milhões.
 
@@ -175,26 +159,19 @@ Podemos fazer um gráfico de barras.
 
 ```{r}
 imdb %>%
+  count(diretor) %>%
   ggplot() +
-  geom_bar(aes(x = diretor))
+  geom_col(aes(x = diretor, y = n))
 ```
 
 Vamos visualizar apenas os 10 diretores com mais filmes.
 
 ```{r}
 imdb %>% 
-  dplyr::count(diretor) %>% 
+  count(diretor) %>% 
   arrange(desc(n)) %>% 
   filter(!is.na(diretor)) %>% 
-  dplyr::top_n(10, n) %>%
-  ggplot() +
-  geom_bar(aes(x = diretor, y = n), stat = "identity")
-
-imdb %>% 
-  dplyr::count(diretor) %>% 
-  arrange(desc(n)) %>% 
-  filter(!is.na(diretor)) %>% 
-  dplyr::top_n(10, n) %>%
+  top_n(10, n) %>%
   ggplot() +
   geom_col(aes(x = diretor, y = n))
 ```
@@ -208,9 +185,23 @@ imdb %>%
   filter(!is.na(diretor)) %>% 
   top_n(10, n) %>%
   ggplot() +
-  geom_bar(aes(x = diretor, y = n), stat = "identity") +
+  geom_col(aes(x = diretor, y = n)) +
   theme(axis.text.x = element_text(angle = 45, vjust = 0.5))
 ```
+
+Em vez de rotacionar os rótulos, podemos inverter os eixos usando `coord_flip()`
+
+```{r}
+imdb %>% 
+  count(diretor) %>% 
+  arrange(desc(n)) %>% 
+  filter(!is.na(diretor)) %>% 
+  top_n(10, n) %>%
+  ggplot() +
+  geom_col(aes(x = diretor, y = n)) +
+  coord_flip()
+```
+
 
 Também seria interessante ordenar as barras de forma crescente. Para isso, precisamos lidar com `fatores`.
 
@@ -240,8 +231,8 @@ imdb %>%
     diretor = fct_reorder(diretor, n)
   ) %>% 
   ggplot() +
-  geom_bar(aes(x = diretor, y = n), stat = "identity") +
-  theme(axis.text.x = element_text(angle = 45, vjust = 0.5))
+  geom_col(aes(x = diretor, y = n)) +
+  coord_flip()
 ```
 
 Também podemos escolher outra cor para as barras.
@@ -256,32 +247,47 @@ imdb %>%
     diretor = fct_reorder(diretor, n)
   ) %>% 
   ggplot() +
-  geom_bar(
+  geom_col(
     aes(x = diretor, y = n), 
-    stat = "identity", 
-    color = "darkblue",
-    fill = "pink"
+    color = "black",
+    fill = "darkred"
   ) +
-  theme(axis.text.x = element_text(angle = 45, vjust = 0.5))
+  theme_minimal() +
+  coord_flip()
+```
 
+# Gráfico de barras empilhadas (stack)
+
+position = "stack"
+position = "dodge"
+position = "fill"
+
+obs: lição extra de
+  - group_by() + mutate()
+  - ungrpup()
+  
+```{r}
 imdb %>% 
-  count(diretor) %>% 
-  arrange(desc(n)) %>% 
-  filter(!is.na(diretor)) %>% 
-  top_n(10, n) %>%
+  mutate(
+    lucrou = lucro > 0
+  ) %>%
+  filter(!is.na(lucrou)) %>%
+  count(diretor, lucrou, sort = TRUE) %>% 
+  group_by(diretor) %>%
+  mutate(
+    total_de_filmes = sum(n),
+    p_filmes_que_lucraram = sum(n[lucrou])/sum(n)
+  ) %>%
+  ungroup() %>%
+  filter(!is.na(diretor), total_de_filmes > 12) %>% 
   mutate(
     diretor = fct_reorder(diretor, n)
   ) %>% 
-  ggplot() +
-  geom_bar(
-    aes(x = diretor, y = n, fill = diretor), 
-    stat = "identity", 
-    color = "darkblue",
-    show.legend = FALSE
-  ) +
-  theme(axis.text.x = element_text(angle = 45, vjust = 0.5))
+  ggplot(aes(x = diretor, y = n, fill = lucrou)) +
+  geom_col(position = "stack") +
+  theme_minimal() +
+  coord_flip()
 ```
-
 
 # Boxplots
 

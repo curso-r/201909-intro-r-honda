@@ -24,6 +24,29 @@ parcela_balao_grafico <- read_excel("../dados/Parcela_balao_grafico.xlsx", sheet
 glimpse(parcela_balao_grafico)
 ```
 
+```{r, eval = FALSE}
+# um pouco de vocabulario pra explorar um data.frame (tabela)
+View(parcela_balao_grafico)
+
+glimpse(parcela_balao_grafico)
+
+names(parcela_balao_grafico)
+
+head(parcela_balao_grafico)
+
+tail(parcela_balao_grafico)
+
+parcela_balao_grafico$vlr_venda
+
+parcela_balao_grafico[10:20, 2:4]
+
+table(parcela_balao_grafico$cta_qtd_parcelas_p)
+
+unique(parcela_balao_grafico$cta_qtd_parcelas_p)
+
+skim(parcela_balao_grafico)
+```
+
 
 
 ## Gráfico de Barras
