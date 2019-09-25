@@ -1,0 +1,36 @@
+---
+title: "Dashboard - Honda"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Título 1
+
+```{r}
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Título 2
+
+```{r}
+
+```
+
+### Título 3
+
+```{r}
+
+```
+

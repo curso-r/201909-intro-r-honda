@@ -47,8 +47,6 @@ unique(parcela_balao_grafico$cta_qtd_parcelas_p)
 skim(parcela_balao_grafico)
 ```
 
-
-
 ## Gráfico de Barras
 
 Vamos replicar o gráfico de barras da terceira aba da planilha `Parcela_balao_grafico.xlsx`
@@ -77,7 +75,6 @@ parcela_balao_grafico <- parcela_balao_grafico %>%
 ```{r}
 parcela_balao_grafico %>% count(Perc_categ)
 ```
-
 
 
 ### Fazendo o gráfico com ggplot2
